@@ -7,6 +7,7 @@
 // TODO:sortAndPrinting() -> sorting keys of the hashmap and printing them
 
 mod defStopWords;
+mod genWordsAndText;
 
 use defStopWords::defStopWords::stopWordsDefining;
 

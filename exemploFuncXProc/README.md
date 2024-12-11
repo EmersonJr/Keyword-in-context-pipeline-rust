@@ -1,0 +1,2 @@
+Vamos supor que desejamos realizar um problema onde iremos computar quantos divisores primos um determinado número tem.
+Podemos modelar isso de duas formas, da forma procedimental ou da forma funcional, os dois codigos aqui presentes em rust apresentam esses dois modelos de abordagem
