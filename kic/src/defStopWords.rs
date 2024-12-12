@@ -14,8 +14,7 @@ pub mod defStopWords {
 
         for line in reader.lines() {
 
-            let key = String::from(line.unwrap());
-
+            let key = String::from(line.unwrap()).to_lowercase();
             stopWords.entry(key).or_insert(1);
         }
         

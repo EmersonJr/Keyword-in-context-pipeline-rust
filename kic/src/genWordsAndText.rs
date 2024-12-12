@@ -29,7 +29,7 @@ pub mod genWordsAndText {
             let mut linha = line.unwrap();
 
             if cnt == 0 {
-                
+
                 tamanJanela = linha.trim().parse::<i32>().unwrap() as usize;
                 cnt += 1;
                 continue;
@@ -57,7 +57,7 @@ pub mod genWordsAndText {
 
                 if act.phrase.len() == cmp::min(tamanJanela, frase.len() / 2) {
 
-                    let num = match stopWords.get(act.phrase.front().unwrap()) {
+                    let num = match stopWords.get(&act.phrase.front().unwrap().to_lowercase()) {
                         Some(x)  => *x,
                         None => 0,
                     };
