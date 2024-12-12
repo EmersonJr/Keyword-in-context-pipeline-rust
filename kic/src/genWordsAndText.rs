@@ -1,5 +1,6 @@
-use std::collections::VecDeque;
-#[derive(Clone)]  
+use std::{collections::VecDeque, path::Iter};
+
+#[derive(Clone)]
 pub struct WordContext {
 
     pub phrase: VecDeque<String>,
