@@ -1,6 +1,5 @@
 pub mod genStringAns {
-
-    
+ 
     use std::fs::File;
     use std::io::{self, BufRead, BufReader};
     use crate::genWordsAndText::WordContext;

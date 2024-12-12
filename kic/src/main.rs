@@ -9,19 +9,17 @@
 mod defStopWords;
 mod genWordsAndText;
 mod genStringAns;
+mod sortAndPrinting;
 
 use defStopWords::defStopWords::stopWordsDefining;
 use genWordsAndText::genWordsAndText::genWordsAndText;
 use genStringAns::genStringAns::genStringAns;
+use sortAndPrinting::sortAndPrinting::sortAndPrinting;
+
 fn main() {
 
-    let aux = match genStringAns(genWordsAndText(stopWordsDefining().unwrap()).unwrap()) {
+    match sortAndPrinting(genStringAns(genWordsAndText(stopWordsDefining().unwrap()).unwrap()).unwrap()) {
         Ok(stopWords) => stopWords,
         Err(s) => panic!("{}", s),
     };
-
-    for act in aux {
-
-        println!("{}", act);
-    }
 }
