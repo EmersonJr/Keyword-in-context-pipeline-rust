@@ -1,10 +1,10 @@
 // defining the functions to the pipeline
 //
-// stop_words_defining() -> HashMap of stop words and a Boolean value -> check
-// gen_words_and_text() -> hashmap of words and text (String) taken from the file,
-// using the stop words -> check
-// gen_string_ans() -> sorting the hashmap of words and text -> check
-// sort_and_printing() -> sorting keys of the hashmap and printing them -> check
+// stop_words_defining() -> HashMap of stop words and an int value
+// gen_words_and_text() -> vector of a struct created to put a deque
+// and a indentifier together
+// gen_string_ans() -> generating the string that needs to be printed
+// sort_and_printing() -> sorting the strings with the keyword in context
 
 mod def_stop_words;
 mod gen_string_ans;
@@ -20,11 +20,11 @@ fn main() {
     match sort_and_printing(
         gen_string_ans(
             gen_words_and_text(
-                stop_words_defining("./source/defStopWords.txt").unwrap(),
-                "./source/texts.txt",
+                stop_words_defining("./src/source/stopWords.txt").unwrap(),
+                "./src/source/texts.txt",
             )
             .unwrap(),
-            "./source/texts.txt",
+            "./src/source/texts.txt",
         )
         .unwrap(),
     ) {
