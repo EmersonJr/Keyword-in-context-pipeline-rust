@@ -1,7 +1,7 @@
-pub mod sortAndPrinting {
+pub mod sort_and_printing {
     use std::io;
 
-    pub fn sortAndPrinting(frases: Vec<String>) -> Result<String, io::Error> {
+    pub fn sort_and_printing(frases: Vec<String>) -> Result<String, io::Error> {
         let mut fras = frases.clone();
 
         let retorno = String::from("");

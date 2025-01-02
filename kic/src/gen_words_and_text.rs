@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, path::Iter};
+use std::collections::VecDeque;
 
 #[derive(Clone)]
 pub struct WordContext {
@@ -6,7 +6,7 @@ pub struct WordContext {
     pub wher: i32,
 }
 
-pub mod genWordsAndText {
+pub mod gen_words_and_text {
 
     use super::WordContext;
     use std::cmp;
@@ -14,25 +14,27 @@ pub mod genWordsAndText {
     use std::fs::File;
     use std::io::{self, BufRead, BufReader};
 
-    pub fn genWordsAndText(stopWords: HashMap<String, i32>, path: &str) -> Result<Vec<WordContext>, io::Error> {
-        let mut wordsAndContext: Vec<WordContext> = Vec::new();
+    pub fn gen_words_and_text(
+        stop_words: HashMap<String, i32>,
+        path: &str,
+    ) -> Result<Vec<WordContext>, io::Error> {
+        let mut words_and_context: Vec<WordContext> = Vec::new();
 
         let file = File::open(path)?;
         let reader = BufReader::new(file);
 
         let mut cnt = 0;
-        let mut tamanJanela = 0;
+        let mut taman_janela = 0;
 
         for line in reader.lines() {
             let mut linha = line.unwrap();
 
             if cnt == 0 {
-                tamanJanela = match linha.trim().parse::<i32>(){
-
+                taman_janela = match linha.trim().parse::<i32>() {
                     Ok(num) => num as usize,
-                    Err(e) => 1000000000 as usize,
+                    Err(_e) => 1000000000 as usize,
                 };
-                if tamanJanela < 1000000000 {
+                if taman_janela < 1000000000 {
                     cnt += 1;
                     continue;
                 }
@@ -46,7 +48,7 @@ pub mod genWordsAndText {
                 phrase: VecDeque::new(),
                 wher: cnt,
             };
-            
+
             let mut aux = 0;
 
             for palavra in &frase {
@@ -56,14 +58,15 @@ pub mod genWordsAndText {
 
                 act.phrase.push_back(String::from(*palavra));
 
-                if act.phrase.len() == cmp::min(tamanJanela, frase.len() / 2) {
-                    let isStopWord = match stopWords.get(&act.phrase.front().unwrap().to_lowercase()) {
-                        Some(x) => *x,
-                        None => 0,
-                    };
+                if act.phrase.len() == cmp::min(taman_janela, frase.len() / 2) {
+                    let is_stop_word =
+                        match stop_words.get(&act.phrase.front().unwrap().to_lowercase()) {
+                            Some(x) => *x,
+                            None => 0,
+                        };
 
-                    if isStopWord == 0 {
-                        wordsAndContext.push(act.clone());
+                    if is_stop_word == 0 {
+                        words_and_context.push(act.clone());
                     }
 
                     act.phrase.pop_front();
@@ -74,6 +77,6 @@ pub mod genWordsAndText {
             cnt += 1;
         }
 
-        Ok(wordsAndContext)
+        Ok(words_and_context)
     }
 }

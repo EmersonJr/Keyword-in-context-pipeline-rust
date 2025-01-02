@@ -1,12 +1,15 @@
-pub mod genStringAns {
+pub mod gen_string_ans {
 
-    use crate::genWordsAndText::WordContext;
+    use crate::gen_words_and_text::WordContext;
     use std::fs::File;
     use std::io::{self, BufRead, BufReader};
 
-    pub fn genStringAns(contextWords: Vec<WordContext>, path: &str) -> Result<Vec<String>, io::Error> {
+    pub fn gen_string_ans(
+        context_words: Vec<WordContext>,
+        path: &str,
+    ) -> Result<Vec<String>, io::Error> {
         let mut frases = Vec::new();
-        let mut originFrases = Vec::new();
+        let mut origin_frases = Vec::new();
 
         let file = File::open(path)?;
         let reader = BufReader::new(file);
@@ -14,10 +17,10 @@ pub mod genStringAns {
         for line in reader.lines() {
             let linha = String::from(line.unwrap().trim());
 
-            originFrases.push(linha);
+            origin_frases.push(linha);
         }
 
-        for context in contextWords {
+        for context in context_words {
             let mut frase = String::from("");
 
             let mut aux = 0;
@@ -34,7 +37,7 @@ pub mod genStringAns {
 
             frase = format!(
                 r##"{}   (from "{}")"##,
-                frase, originFrases[context.wher as usize]
+                frase, origin_frases[context.wher as usize]
             );
 
             frases.push(frase);
