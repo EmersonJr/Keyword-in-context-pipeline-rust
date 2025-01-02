@@ -1,38 +1,18 @@
 use std::io;
-use std::iter;
 
-fn crivo(x : &mut i32) -> i32 {
-
-    let mut vis : Vec<i32> = iter::repeat(0).take((*x+1) as usize).collect();
-
-    let mut idx = 2;
-    let mut ans = 0;
-
-    while idx <= *x {
-
-        if vis[idx as usize] != 0 {
-
-            idx += 1;
-            continue;
-        }
-
-        let mut j = idx+idx;
-
-        while j <= *x {
-
-            if j == *x {
-
-                ans += 1;
-            }
-
-            vis[j as usize] = 1;
-
-            j += idx;
-        }
-
-        idx += 1;
+fn divsPrimes(x : &mut i32, y : &mut i32) -> i32 {
+    
+    if (*y)*(*y) > *x {
+        
+        return 0;
     }
-    ans
+    
+    if *x % *y == 0 {
+
+        return divsPrimes(x, &mut( *y + 1)) + 2;
+    }
+    
+    return divsPrimes(x, &mut (*y+1));
 }
 
 fn main() {
@@ -41,9 +21,10 @@ fn main() {
 
     let n = io::stdin().read_line(&mut inp).unwrap();
     let mut value = inp.trim().parse::<i32>().unwrap();
+    let mut aux = 1;
 
-    let ans = crivo(&mut value);
+    let ans = divsPrimes(&mut value, &mut aux);
 
-    println!("{}, value é inalterado", value);
+    println!("{}, {}, os valores não são alterados", value, aux);
     print!("{}, resposta", ans);
 }
