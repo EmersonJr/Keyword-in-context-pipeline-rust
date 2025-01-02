@@ -4,11 +4,11 @@ pub mod genStringAns {
     use std::fs::File;
     use std::io::{self, BufRead, BufReader};
 
-    pub fn genStringAns(contextWords: Vec<WordContext>) -> Result<Vec<String>, io::Error> {
+    pub fn genStringAns(contextWords: Vec<WordContext>, path: &str) -> Result<Vec<String>, io::Error> {
         let mut frases = Vec::new();
         let mut originFrases = Vec::new();
 
-        let file = File::open("./source/texts.txt")?;
+        let file = File::open(path)?;
         let reader = BufReader::new(file);
 
         for line in reader.lines() {

@@ -14,10 +14,10 @@ pub mod genWordsAndText {
     use std::fs::File;
     use std::io::{self, BufRead, BufReader};
 
-    pub fn genWordsAndText(stopWords: HashMap<String, i32>) -> Result<Vec<WordContext>, io::Error> {
+    pub fn genWordsAndText(stopWords: HashMap<String, i32>, path: &str) -> Result<Vec<WordContext>, io::Error> {
         let mut wordsAndContext: Vec<WordContext> = Vec::new();
 
-        let file = File::open("./source/texts.txt")?;
+        let file = File::open(path)?;
         let reader = BufReader::new(file);
 
         let mut cnt = 0;
@@ -27,9 +27,15 @@ pub mod genWordsAndText {
             let mut linha = line.unwrap();
 
             if cnt == 0 {
-                tamanJanela = linha.trim().parse::<i32>().unwrap() as usize;
-                cnt += 1;
-                continue;
+                tamanJanela = match linha.trim().parse::<i32>(){
+
+                    Ok(num) => num as usize,
+                    Err(e) => 1000000000 as usize,
+                };
+                if tamanJanela < 1000000000 {
+                    cnt += 1;
+                    continue;
+                }
             }
 
             linha = format!("{} {}", linha, linha);
@@ -40,7 +46,7 @@ pub mod genWordsAndText {
                 phrase: VecDeque::new(),
                 wher: cnt,
             };
-
+            
             let mut aux = 0;
 
             for palavra in &frase {
@@ -51,12 +57,12 @@ pub mod genWordsAndText {
                 act.phrase.push_back(String::from(*palavra));
 
                 if act.phrase.len() == cmp::min(tamanJanela, frase.len() / 2) {
-                    let num = match stopWords.get(&act.phrase.front().unwrap().to_lowercase()) {
+                    let isStopWord = match stopWords.get(&act.phrase.front().unwrap().to_lowercase()) {
                         Some(x) => *x,
                         None => 0,
                     };
 
-                    if num == 0 {
+                    if isStopWord == 0 {
                         wordsAndContext.push(act.clone());
                     }
 
