@@ -18,7 +18,7 @@ use sort_and_printing::sort_and_printing::sort_and_printing;
 
 fn main() {
     match sort_and_printing(
-        gen_string_ans(
+        &gen_string_ans(
             gen_words_and_text(
                 stop_words_defining("./src/source/stopWords.txt").unwrap(),
                 "./src/source/texts.txt",
@@ -41,6 +41,7 @@ mod tests {
     use super::gen_words_and_text::gen_words_and_text::gen_words_and_text;
     use super::sort_and_printing::sort_and_printing::sort_and_printing;
     use std::collections::HashMap;
+    use std::fmt::format;
     use std::fs::OpenOptions;
     use std::io::Write;
 
@@ -197,7 +198,6 @@ mod tests {
     }
     #[test]
     fn working_gen_words_and_gen_stop_words() {
-
         let path = "./src/source/stopwords1.txt";
         let mut file = OpenOptions::new()
             .write(true)
@@ -271,7 +271,6 @@ mod tests {
 
     #[test]
     fn working_gen_words_and_gen_stop_words_full_txt() {
-
         let path = "./src/source/stopwords2.txt";
         let mut file = OpenOptions::new()
             .write(true)
@@ -300,11 +299,7 @@ mod tests {
 
         file1.set_len(0).unwrap();
 
-        let texts_set = vec![
-            "The quick brown fox",
-            "A brown cat sat",
-            "The cat is brown",
-        ];
+        let texts_set = vec!["The quick brown fox", "A brown cat sat", "The cat is brown"];
         let right_texts = vec![
             "quick brown fox The",
             "brown fox The quick",
@@ -340,5 +335,166 @@ mod tests {
             assert_eq!(word_cont_str.as_str(), right_texts[idx]);
             idx += 1;
         }
+    }
+
+    #[test]
+    fn working_gen_string_ans() {
+        let path = "./src/source/stopwords3.txt";
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&path)
+            .unwrap();
+
+        file.set_len(0).unwrap();
+
+        let stop_words_set = vec!["A", "ThE", "Is", "sAt"];
+
+        for stop_word in &stop_words_set {
+            file.write((*stop_word).as_bytes()).unwrap();
+            file.write("\n".as_bytes()).unwrap();
+        }
+
+        let path1 = "./src/source/texts4.txt";
+
+        let mut file1 = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&path1)
+            .unwrap();
+
+        file1.set_len(0).unwrap();
+
+        let texts_set = vec!["The quick brown fox", "A brown cat sat", "The cat is brown"];
+        let right_texts = vec![
+            r##"quick brown fox The   (from "The quick brown fox")"##,
+            r##"brown fox The quick   (from "The quick brown fox")"##,
+            r##"fox The quick brown   (from "The quick brown fox")"##,
+            r##"brown cat sat A   (from "A brown cat sat")"##,
+            r##"cat sat A brown   (from "A brown cat sat")"##,
+            r##"cat is brown The   (from "The cat is brown")"##,
+            r##"brown The cat is   (from "The cat is brown")"##,
+        ];
+
+        for txti in &texts_set {
+            file1.write((*txti).as_bytes()).unwrap();
+            file1.write("\n".as_bytes()).unwrap();
+        }
+        let word_contexts_formated = gen_string_ans(
+            gen_words_and_text(stop_words_defining(path).unwrap(), path1).unwrap(),
+            path1,
+        )
+        .unwrap();
+
+        let mut idx = 0;
+
+        for resposta in word_contexts_formated {
+            assert_eq!(resposta.as_str(), right_texts[idx]);
+
+            idx += 1;
+        }
+    }
+
+    #[test]
+    fn working_sort_and_printing() {
+        let mut to_be_sorted_texts = vec![
+            r##"quick brown fox The   (from "The quick brown fox")"##.to_string(),
+            r##"brown fox The quick   (from "The quick brown fox")"##.to_string(),
+            r##"fox The quick brown   (from "The quick brown fox")"##.to_string(),
+            r##"brown cat sat A   (from "A brown cat sat")"##.to_string(),
+            r##"cat sat A brown   (from "A brown cat sat")"##.to_string(),
+            r##"cat is brown The   (from "The cat is brown")"##.to_string(),
+            r##"brown The cat is   (from "The cat is brown")"##.to_string(),
+        ];
+
+        let sortado = sort_and_printing(&to_be_sorted_texts).unwrap();
+
+        to_be_sorted_texts.sort_by(|a, b| (a.to_lowercase()).cmp(&b.to_lowercase()));
+
+        let mut pat_sorted = String::from("");
+
+        for fras in to_be_sorted_texts {
+            if pat_sorted == "" {
+                pat_sorted = fras;
+                continue;
+            }
+
+            pat_sorted = format!("{}\n{}", pat_sorted, fras);
+        }
+
+        assert_eq!(sortado, pat_sorted);
+    }
+
+    #[test]
+    fn working_all() {
+        let path = "./src/source/stopwords4.txt";
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&path)
+            .unwrap();
+
+        file.set_len(0).unwrap();
+
+        let stop_words_set = vec!["A", "ThE", "Is", "sAt"];
+
+        for stop_word in &stop_words_set {
+            file.write((*stop_word).as_bytes()).unwrap();
+            file.write("\n".as_bytes()).unwrap();
+        }
+
+        let path1 = "./src/source/texts5.txt";
+
+        let mut file1 = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&path1)
+            .unwrap();
+
+        file1.set_len(0).unwrap();
+
+        let texts_set = vec!["The quick brown fox", "A brown cat sat", "The cat is brown"];
+        let mut right_texts = vec![
+            r##"quick brown fox The   (from "The quick brown fox")"##,
+            r##"brown fox The quick   (from "The quick brown fox")"##,
+            r##"fox The quick brown   (from "The quick brown fox")"##,
+            r##"brown cat sat A   (from "A brown cat sat")"##,
+            r##"cat sat A brown   (from "A brown cat sat")"##,
+            r##"cat is brown The   (from "The cat is brown")"##,
+            r##"brown The cat is   (from "The cat is brown")"##,
+        ];
+
+        right_texts.sort_by(|a, b| (a.to_lowercase()).cmp(&b.to_lowercase()));
+
+        let mut pat_sorted = String::from("");
+
+        for fras in right_texts {
+            if pat_sorted == "" {
+                pat_sorted = fras.to_string();
+                continue;
+            }
+
+            pat_sorted = format!("{}\n{}", pat_sorted, fras);
+        }
+
+        for txti in &texts_set {
+            file1.write((*txti).as_bytes()).unwrap();
+            file1.write("\n".as_bytes()).unwrap();
+        }
+
+        let final_contexts = sort_and_printing(
+            &gen_string_ans(
+                gen_words_and_text(stop_words_defining(path).unwrap(), path1).unwrap(),
+                path1,
+            )
+            .unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(final_contexts, pat_sorted);
     }
 }
